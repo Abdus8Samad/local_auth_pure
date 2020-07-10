@@ -56,7 +56,7 @@ router.post('/login',(req,res) =>{
             .then(user =>{
                 res.cookie('user',user,{
                     httpOnly:true,
-                    sameSite:'lax'
+                    sameSite:'strict'
                 })
                 req.flash('success',`Welcome back ${user.username}`);
                 res.redirect('/');
@@ -89,7 +89,7 @@ router.post('/register',(req,res) =>{
                 console.log(user);
                 res.cookie('user',user,{
                     httpOnly:true,
-                    sameSite:'lax'
+                    sameSite:'strict'
                 })
                 req.flash('success',`Welcome ${user.username}`);
                 res.redirect('/');
@@ -106,4 +106,10 @@ router.post('/register',(req,res) =>{
     })
 })
 
+
+router.get('/logout',(req,res) =>{
+    res.clearCookie('user');
+    req.flash('success','You\'ve been logged out successfully');
+    res.redirect('/');
+})
 module.exports = router;

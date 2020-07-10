@@ -26,7 +26,7 @@ app.use(expressSession({
     saveUninitialized:true,
     cookie:{
         httpOnly:true,
-        sameSite:'lax'
+        sameSite:'strict'
     }
 }))
 app.use(flash());
