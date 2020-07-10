@@ -58,18 +58,20 @@ router.post('/login',(req,res) =>{
                     httpOnly:true,
                     sameSite:'lax'
                 })
+                req.flash('success',`Welcome back ${user.username}`);
                 res.redirect('/');
             })
             .catch(err =>{
-                console.log(err);
+                req.flash('error',err);
                 res.redirect('/');
             })
         } else {
-            console.log('Incorrect Username or Password');
+            req.flash('error',`Incorrect Username or Password`);
             res.redirect('/');
         }
     })
     .catch(err =>{
+        req.flash('error',err.message);
         res.redirect('/');
         console.log(err);
     })
@@ -79,7 +81,7 @@ router.post('/register',(req,res) =>{
     User.findOne(req.body.user)
     .then(user =>{
         if(user){
-            console.log('User already Created');
+            req.flash('error','User already Created');
             res.redirect('/');
         } else {
             register(req.body.user,req.body.password)
@@ -89,16 +91,17 @@ router.post('/register',(req,res) =>{
                     httpOnly:true,
                     sameSite:'lax'
                 })
+                req.flash('success',`Welcome ${user.username}`);
                 res.redirect('/');
             })
             .catch(err =>{
-                console.log(err);
+                req.flash('error',err);
                 res.redirect('/');
             })
         }
     })
     .catch(err =>{
-        console.log(err);
+        req.flash('error',err.message);
         res.redirect('/');
     })
 })

@@ -4,6 +4,12 @@
         <title>Home Page</title>
     </head>
     <body>
+        <% if(success){ %>
+            <h1><%= success %></h1>
+        <% } %>
+        <% if(error){ %>
+            <h1><%= error %></h1>
+        <% } %>
         <% if(user){ %>
             <h1><%= user.username %></h1>
         <% } %> 

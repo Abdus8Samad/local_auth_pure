@@ -1,11 +1,11 @@
 const express = require('express'),
 app = express(),
 morgan = require('morgan'),
-bcrypt = require('bcrypt'),
 path = require('path'),
 PORT = process.env.PORT || 8080,
 cookieParser = require('cookie-parser'),
 bodyParser = require('body-parser'),
+expressSession = require('express-session'),
 flash = require('connect-flash'),
 mongoose = require('mongoose');
 require('dotenv/config');
@@ -20,9 +20,20 @@ app.use(express.static(path.join(__dirname,'public')));
 app.set('view engine','ejs');
 app.use(morgan('dev'));
 app.use(cookieParser());
+app.use(expressSession({
+    secret:'My secret !!',
+    resave:true,
+    saveUninitialized:true,
+    cookie:{
+        httpOnly:true,
+        sameSite:'lax'
+    }
+}))
 app.use(flash());
 app.use((req,res,next) =>{
     req.user = req.cookies['user']
+    res.locals.error = req.flash('error')
+    res.locals.success = req.flash('success')
     next();
 })
 
