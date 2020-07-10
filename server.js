@@ -5,6 +5,7 @@ bcrypt = require('bcrypt'),
 path = require('path'),
 PORT = process.env.PORT || 8080,
 cookieParser = require('cookie-parser'),
+bodyParser = require('body-parser'),
 flash = require('connect-flash'),
 mongoose = require('mongoose');
 require('dotenv/config');
@@ -14,11 +15,16 @@ mongoose.connect(process.env.MONGO_URI,{useNewUrlParser:true,useUnifiedTopology:
 .then(() => console.log('Connected to the DB'))
 .catch(err => console.log(err));
 
+app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static(path.join(__dirname,'public')));
 app.set('view engine','ejs');
 app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(flash());
+app.use((req,res,next) =>{
+    req.user = req.cookies['user']
+    next();
+})
 
 const indexRoutes = require('./routes/index'),
 authRoutes = require('./routes/auth');

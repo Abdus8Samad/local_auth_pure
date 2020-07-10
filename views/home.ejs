@@ -4,6 +4,9 @@
         <title>Home Page</title>
     </head>
     <body>
+        <% if(user){ %>
+            <h1><%= user.username %></h1>
+        <% } %> 
         <form method="POST" action="/auth/login">
             <input type="text" name="user[username]" placeholder="Username" />
             <input type="password" name="password" placeholder="Password" />
