@@ -66,7 +66,8 @@ function initialise(req,res,next){
 
 const pure = {
     login,
-    register
+    register,
+    initialise
 }
 
 module.exports = pure;
