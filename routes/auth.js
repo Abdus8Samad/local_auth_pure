@@ -2,6 +2,31 @@ const router = require('express').Router(),
 bcrypt = require('bcrypt'),
 User = require('../models/user');
 
+function login(user,password){
+    let promise = new Promise((resolve,reject) =>{
+        let { username } = user;
+        User.findOne({username})
+        .then(user =>{
+            if(user){
+                bcrypt.hash(password,user.salt,(err,hash) =>{
+                    if(hash === user.hash && !err){
+                        resolve(user);
+                    } else {
+                        (err)?(
+                            reject(err)
+                        ):(
+                            reject('Incorrect Username or Password')
+                        )
+                    }
+                })
+            } else {
+                reject('Incorrect Username or Password')
+            }
+        })    
+    })
+    return promise;
+}
+
 function register(user, password){
     let promise = new Promise((resolve,reject) =>{
         bcrypt.genSalt(10,(err,salt) =>{
@@ -27,7 +52,18 @@ router.post('/login',(req,res) =>{
     User.findOne(req.body.user)
     .then(user =>{
         if(user){
-            
+            login(user,req.body.password)
+            .then(user =>{
+                res.cookie('user',user,{
+                    httpOnly:true,
+                    sameSite:'lax'
+                })
+                res.redirect('/');
+            })
+            .catch(err =>{
+                console.log(err);
+                res.redirect('/');
+            })
         } else {
             console.log('Incorrect Username or Password');
             res.redirect('/');
