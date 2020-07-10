@@ -5,7 +5,7 @@
 $ npm i
 ```
 
-## Usage
+## Usage `auth.js`
 
 ```js
 router.post('/login',(req,res) =>{
