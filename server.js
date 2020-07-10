@@ -24,6 +24,10 @@ app.use(cookieParser());
 app.use(flash());
 //Initialise purejs
 app.use(pure.initialise);
+app.use((req,res,next) =>{
+    res.locals.user = req.user
+    next();
+})
 
 const indexRoutes = require('./routes/index'),
 authRoutes = require('./routes/auth');

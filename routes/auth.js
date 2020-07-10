@@ -3,12 +3,10 @@ User = require('../models/user'),
 pure = require('../pure/pure');
 
 router.post('/login',(req,res) =>{
-    //Find the user in the DB
-    let { username } = req.body.user;
     //Password entered by the user
     let password = req.body.password;
-    User.findOne({username})
-    .then(user =>{
+    //User obj given by the user
+    let user = req.body.user;
         pure.login(user,password)
         .then(user =>{
             //Create the cookie named user as you want for logging in [i'm creating a session cookie]
@@ -27,17 +25,8 @@ router.post('/login',(req,res) =>{
             res.redirect('/');
         })
     })
-})
 
 router.post('/register',(req,res) =>{
-    //Check if user already registered
-    let { username } = req.body.user;
-    User.findOne({username})
-    .then(user =>{
-        if(user){
-            //User already registered
-            res.redirect('/');
-        } else {
             //Register with the given user and password
             pure.register(req.body.user,req.body.password)
             .then(user =>{
@@ -56,16 +45,7 @@ router.post('/register',(req,res) =>{
                 //Failure Redirect
                 res.redirect('/');
             })
-        }
-    })
-    .catch(err =>{
-        //Error by the DB
-        console.log(err);
-        //Failure Redirect
-        res.redirect('/');
-    })
-})
-
+        })
 
 router.get('/logout',(req,res) =>{
     //For logging out just clear the cookie named user
